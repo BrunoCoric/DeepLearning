@@ -50,7 +50,7 @@ class Net(nn.Module):
         #F.log_softmax(x, dim=0)
 
 categories = []
-filename = os.listdir("C:/Users/Domagoj Ćorić/PycharmProjects/deepLearning/input/train/train")
+filename = os.listdir("folder sa podacima za treniranje")
 for file in filename:
     category = file.split(".")[0]
     if category == "dog":
@@ -71,8 +71,8 @@ train_transform = transforms.Compose([transforms.ToPILImage(),
 
 
 train, valid_data = train_test_split(df,test_size=0.2)
-train_data = DCDataset(train,"C:/Users/Domagoj Ćorić/PycharmProjects/deepLearning/input/train/train",train_transform)
-valid_data = DCDataset(valid_data,"C:/Users/Domagoj Ćorić/PycharmProjects/deepLearning/input/train/train",train_transform)
+train_data = DCDataset(train,"folder sa podacima za treniranje",train_transform)
+valid_data = DCDataset(valid_data,"folder sa podacima za treniranje",train_transform)
 
 epochs = 20
 classes = 2
@@ -102,25 +102,25 @@ for epoch in range(1, epochs + 1):
     # training-the-model
     model.train()
     for data, target in train_loader:
-        # move-tensors-to-GPU
+       
         data = data.to(device)
         target = target.to(device)
 
-        # clear-the-gradients-of-all-optimized-variables
+       
         optimizer.zero_grad()
-        # forward-pass: compute-predicted-outputs-by-passing-inputs-to-the-model
+        
         output = model(data)
         _, predicted = torch.max(output.data, 1)
         correct_train += (predicted == target).sum().item()
-        # calculate-the-batch-loss
+        
         loss = criterion(output, target)
-        # backward-pass: compute-gradient-of-the-loss-wrt-model-parameters
+        
         loss.backward()
         optimizer.step()
-        # update-training-loss
+        
         train_loss += loss.item() * data.size(0)
 
-    # validate-the-model
+    
     model.eval()
     for data, target in valid_loader:
         data = data.to(device)
@@ -132,10 +132,10 @@ for epoch in range(1, epochs + 1):
 
         loss = criterion(output, target)
 
-        # update-average-validation-loss
+        
         valid_loss += loss.item() * data.size(0)
 
-    # calculate-average-losses
+    
     train_loss = train_loss / len(train_loader.sampler)
     correct_train = correct_train / len(train_loader.sampler)
     valid_loss = valid_loss / len(valid_loader.sampler)
@@ -143,11 +143,11 @@ for epoch in range(1, epochs + 1):
     train_losses.append(train_loss)
     valid_losses.append(valid_loss)
 
-    # print-training/validation-statistics
-    print('Epoch: {} \tTraining Loss: {:.6f} \tValidation Loss: {:.6f} \tCorrect training: {} \tCorrect valid: {}'.format(
+    
+    print('Epoch: {} \tTraining Loss: {:.4f} \tValidation Loss: {:.4f} \tCorrect training: {} \tCorrect valid: {}'.format(
         epoch, train_loss, valid_loss,correct_train,correct_valid))
 
-model.eval()  # it-disables-dropout
+model.eval() 
 with torch.no_grad():
     correct = 0
     total = 0
@@ -161,5 +161,5 @@ with torch.no_grad():
 
     print('Test Accuracy of the model: {} %'.format(100 * correct / total))
 
-PATH = "C:/Users\Domagoj Ćorić/PycharmProjects/deepLearning/dogscats3cnn.pth"
+PATH = "gdje će se spremiti model"
 torch.save(model.state_dict(),PATH)
