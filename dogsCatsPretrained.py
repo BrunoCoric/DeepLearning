@@ -29,7 +29,7 @@ class DCDataset(Dataset):
         return image, label
 
 categories = []
-filename = os.listdir("C:/Users/Domagoj Ćorić/PycharmProjects/deepLearning/input/train/train")
+filename = os.listdir("")
 for file in filename:
     category = file.split(".")[0]
     if category == "dog":
@@ -53,8 +53,8 @@ train_transform = transforms.Compose([transforms.ToPILImage(),
 
 
 train, valid_data = train_test_split(df,test_size=0.2)
-train_data = DCDataset(train,"C:/Users/Domagoj Ćorić/PycharmProjects/deepLearning/input/train/train",train_transform)
-valid_data = DCDataset(valid_data,"C:/Users/Domagoj Ćorić/PycharmProjects/deepLearning/input/train/train",train_transform)
+train_data = DCDataset(train,"",train_transform)
+valid_data = DCDataset(valid_data,"",train_transform)
 
 epochs = 2
 classes = 2
@@ -160,5 +160,5 @@ with torch.no_grad():
 
     print('Test Accuracy of the model: {} %'.format(100 * correct / total))
 
-PATH = "C:/Users\Domagoj Ćorić/PycharmProjects/deepLearning/dogscatsPretrained.pth"
+PATH = ""
 torch.save(model_ft.state_dict(),PATH)
