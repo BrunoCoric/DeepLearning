@@ -74,8 +74,8 @@ train_transform = transforms.Compose([transforms.ToPILImage(),
 
 
 train, valid_data = train_test_split(df,test_size=0.2)
-train_data = DCDataset(train,"C:/Users/Domagoj Ćorić/PycharmProjects/deepLearning/input/train/train",train_transform)
-valid_data = DCDataset(valid_data,"C:/Users/Domagoj Ćorić/PycharmProjects/deepLearning/input/train/train",train_transform)
+train_data = DCDataset(train,"",train_transform)
+valid_data = DCDataset(valid_data,"",train_transform)
 
 epochs = 35
 classes = 2
