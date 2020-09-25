@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -7,7 +6,6 @@ import os
 from sklearn.model_selection import train_test_split
 import torchvision.transforms as transforms
 from torch.utils.data import Dataset,DataLoader
-import matplotlib.image as img
 
 class DCDataset(Dataset):
     def __init__(self, data, path, transform=None):
@@ -49,8 +47,10 @@ class Net(nn.Module):
         return x
         #F.log_softmax(x, dim=0)
 
+# variable categories contains labels for images, 1 if an image is of a dog and 0 if it is of a cat
 categories = []
-filename = os.listdi("")
+filename = os.listdir("")
+
 for file in filename:
     category = file.split(".")[0]
     if category == "dog":
@@ -58,12 +58,13 @@ for file in filename:
     else:
         categories.append(0)
 
+# dataframe that consists of the name of the image so we can fetch the actual data and the label
 df = pd.DataFrame({
     'filename' : filename,
     'category' : categories
 })
 
-
+# resizes the image to 92,92 and normalizes it with values gotten from calculating mean and std of the whole dataset
 train_transform = transforms.Compose([transforms.ToPILImage(),
                                       transforms.Resize(256),
                                       transforms.RandomCrop(254),
@@ -73,6 +74,7 @@ train_transform = transforms.Compose([transforms.ToPILImage(),
                                       transforms.Normalize((0.4883, 0.4551, 0.4170), (0.2208, 0.2161, 0.2163))])
 
 
+# split the data into train and test dataset (80% goes to training dataset)
 train, valid_data = train_test_split(df,test_size=0.2)
 train_data = DCDataset(train,"",train_transform)
 valid_data = DCDataset(valid_data,"",train_transform)
@@ -105,19 +107,21 @@ for epoch in range(1, epochs + 1):
     # training-the-model
     model.train()
     for data, target in train_loader:
-        # move-tensors-to-GPU
+        # move data to gpu
         data = data.to(device)
         target = target.to(device)
 
-        # clear-the-gradients-of-all-optimized-variables
+        # clear the gradients
         optimizer.zero_grad()
-        # forward-pass: compute-predicted-outputs-by-passing-inputs-to-the-model
+        # forward-pass: computes the predicted output
         output = model(data)
+        
+        # gets the index of the highest output (1 is a dog, 0 is a cat)
         _, predicted = torch.max(output.data, 1)
         correct_train += (predicted == target).sum().item()
         # calculate-the-batch-loss
         loss = criterion(output, target)
-        # backward-pass: compute-gradient-of-the-loss-wrt-model-parameters
+        # backward-pass
         loss.backward()
         optimizer.step()
         # update-training-loss
