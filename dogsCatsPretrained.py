@@ -64,6 +64,7 @@ learning_rate = 0.001
 train_loader = DataLoader(dataset=train_data,batch_size=batch,shuffle=True,num_workers=0)
 valid_loader = DataLoader(dataset=valid_data,batch_size=batch,shuffle=True,num_workers=0)
 
+#loads the vgg16 model with 2 outputs
 device = torch.device('cpu')
 model_ft = models.vgg16(pretrained=True)
 model_ft.classifier[6] = nn.Linear(4096,classes)
